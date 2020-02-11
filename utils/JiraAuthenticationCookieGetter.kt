@@ -2,22 +2,34 @@ package base.utils
 
 import okhttp3.Headers
 import okhttp3.Response
-import secrets.JiraSecrets
 
 object JiraAuthenticationCookieGetter {
 
-    private const val LOGIN_URL = "${JiraSecrets.DOMAIN}/rest/auth/1/session"
+    data class JiraAuthData(
+        val jiraDomain: String,
+        val loginPostBody: String
+    )
+
+    private lateinit var jiraAuthData: JiraAuthData
+
+    fun init(jiraAuthData: JiraAuthData) {
+        this.jiraAuthData = jiraAuthData
+    }
 
     suspend fun get(): String {
         return getCookie(getLoginResponseHeaders())
     }
 
     private suspend fun getLoginResponseHeaders(): Headers {
-        return ApiRequester.request<Response>("POST", LOGIN_URL, jsonBody = JiraSecrets.LOGIN_POST_BODY)
+        return ApiRequester.request<Response>("POST", getLoginUrl(), jsonBody = jiraAuthData.loginPostBody)
             .let {
                 it.close()
                 it.headers()
             }
+    }
+
+    private fun getLoginUrl(): String {
+        return "${jiraAuthData.jiraDomain}/rest/auth/1/session"
     }
 
     private fun getCookie(headers: Headers): String {

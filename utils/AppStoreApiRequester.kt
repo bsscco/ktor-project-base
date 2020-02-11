@@ -2,7 +2,6 @@ package base.utils
 
 import io.jsonwebtoken.Jwts
 import okhttp3.Headers
-import secrets.AppStoreSecrets
 import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
@@ -11,6 +10,18 @@ import java.util.concurrent.TimeUnit.MINUTES
 import javax.xml.bind.DatatypeConverter
 
 object AppStoreApiRequester {
+
+    data class JwtData(
+        val privateKeyId: String,
+        val privateKey: String,
+        val issuer: String
+    )
+
+    private lateinit var jwtData: JwtData
+
+    fun init(jwtData: JwtData) {
+        this.jwtData = jwtData
+    }
 
     suspend inline fun <reified T> get(url: String): T {
         return ApiRequester.request("GET", url, createHeaders())
@@ -23,9 +34,9 @@ object AppStoreApiRequester {
     private fun getJwtToken(): String {
         return Jwts.builder()
             .setHeaderParam("alg", "ES256")
-            .setHeaderParam("kid", AppStoreSecrets.JWT_PRIVATE_KEY_ID)
+            .setHeaderParam("kid", jwtData.privateKeyId)
             .setHeaderParam("typ", "JWT")
-            .setIssuer(AppStoreSecrets.JWT_ISSUER)
+            .setIssuer(jwtData.issuer)
             .setAudience("appstoreconnect-v1")
             .setExpiration(Date(System.currentTimeMillis() + MINUTES.toMillis(1)))
             .signWith(loadPrivateKey())
@@ -43,7 +54,7 @@ object AppStoreApiRequester {
 //        dis.close()
 
 //        val temp = String(keyBytes)
-        val temp = AppStoreSecrets.JWT_PRIVATE_KEY
+        val temp = jwtData.privateKey
         var privKeyPEM = temp.replace("-----BEGIN PRIVATE KEY-----", "")
         privKeyPEM = privKeyPEM.replace("-----END PRIVATE KEY-----", "")
         //System.out.println("Private key\n"+privKeyPEM);
