@@ -1,7 +1,6 @@
 package base.utils
 
 import okhttp3.Headers
-import secrets.GithubSecrets
 
 object GithubApiRequester {
 
