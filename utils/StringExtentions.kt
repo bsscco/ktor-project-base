@@ -1,4 +1,4 @@
-package utils
+package base.utils
 
 import com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
 import com.google.gson.GsonBuilder

@@ -1,4 +1,4 @@
-package utils
+package base.utils
 
 import okhttp3.Headers
 import secrets.SlackSecrets

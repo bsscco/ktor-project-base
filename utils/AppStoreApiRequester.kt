@@ -1,4 +1,4 @@
-package utils
+package base.utils
 
 import io.jsonwebtoken.Jwts
 import okhttp3.Headers

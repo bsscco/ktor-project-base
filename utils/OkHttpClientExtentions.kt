@@ -1,4 +1,4 @@
-package utils
+package base.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

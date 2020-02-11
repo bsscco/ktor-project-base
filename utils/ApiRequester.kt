@@ -1,4 +1,4 @@
-package utils
+package base.utils
 
 import io.ktor.client.call.typeInfo
 import okhttp3.Headers
