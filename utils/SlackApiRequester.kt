@@ -4,10 +4,10 @@ import okhttp3.Headers
 
 object SlackApiRequester {
 
-    private lateinit var botAccessToken: String
+    private lateinit var defaultAccessToken: String
 
-    fun init(botAccessToken: String) {
-        this.botAccessToken = botAccessToken
+    fun init(defaultAccessToken: String) {
+        this.defaultAccessToken = defaultAccessToken
     }
 
     suspend inline fun <reified T> get(url: String, accessToken: String? = null): T {
@@ -15,7 +15,7 @@ object SlackApiRequester {
     }
 
     fun createHeaders(accessToken: String? = null): Headers {
-        return Headers.of(mapOf("Authorization" to "Bearer ${accessToken ?: botAccessToken}"))
+        return Headers.of(mapOf("Authorization" to "Bearer ${accessToken ?: defaultAccessToken}"))
     }
 
     suspend inline fun <reified T> post(url: String, jsonBody: String): T {
